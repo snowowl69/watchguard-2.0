@@ -1,0 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 222 47% 7%;
+    --foreground: 220 13% 91%;
+    --card: 220 26% 14%;
+    --card-foreground: 220 13% 91%;
+    --popover: 220 26% 14%;
+    --popover-foreground: 220 13% 91%;
+    --primary: 217 87% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 26% 14%;
+    --secondary-foreground: 220 13% 91%;
+    --muted: 220 17% 17%;
+    --muted-foreground: 220 9% 64%;
+    --accent: 217 87% 53%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 17% 20%;
+    --input: 220 17% 20%;
+    --ring: 217 87% 53%;
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0e1a;
+}
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #374151;
+}
+
+/* Scan line animation for face recognition */
+.scan-overlay {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.scan-line {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #1d6ff0, transparent);
+  animation: scanLine 2s linear infinite;
+}
+
+/* Pulse ring for splash */
+.pulse-ring {
+  position: absolute;
+  border: 2px solid #1d6ff0;
+  border-radius: 50%;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Bounding box overlay */
+.face-box {
+  position: absolute;
+  border: 2px solid #22c55e;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+.face-box.denied {
+  border-color: #ef4444;
+}
+
+/* Confidence bar */
+.confidence-bar {
+  height: 8px;
+  border-radius: 4px;
+  background: #1f2937;
+  overflow: hidden;
+}
+.confidence-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}

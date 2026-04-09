@@ -1,0 +1,14 @@
+node_modules/
+dist/
+build/
+.env
+*.log
+uploads/*
+!uploads/.gitkeep
+ai-service/embeddings/*.npy
+ai-service/__pycache__/
+ai-service/.deepface/
+*.pyc
+.DS_Store
+coverage/
+.turbo/

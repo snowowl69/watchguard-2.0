@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum UserStatus {
+  ACTIVE
+  PENDING
+  REJECTED
+}
+
+enum AttendanceStatus {
+  AUTHORIZED
+  DENIED
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  DANGER
+}
+
+model User {
+  id             String           @id @default(cuid())
+  name           String
+  employeeId     String           @unique
+  email          String           @unique
+  passwordHash   String
+  role           Role             @default(USER)
+  department     String
+  faceEmbedding  Json?
+  faceImagePath  String?
+  status         UserStatus       @default(PENDING)
+  isDeleted      Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  attendanceLogs AttendanceLog[]
+  notifications  Notification[]
+
+  @@index([employeeId])
+  @@index([email])
+  @@index([department])
+  @@index([status])
+}
+
+model AttendanceLog {
+  id         String           @id @default(cuid())
+  userId     String
+  entryTime  DateTime         @default(now())
+  exitTime   DateTime?
+  confidence Float
+  status     AttendanceStatus
+  cameraId   String?
+  createdAt  DateTime         @default(now())
+
+  user   User    @relation(fields: [userId], references: [id])
+  camera Camera? @relation(fields: [cameraId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@index([status])
+  @@index([cameraId])
+}
+
+model FaceRequest {
+  id          String        @id @default(cuid())
+  name        String
+  employeeId  String
+  department  String
+  role        Role          @default(USER)
+  imagePath   String
+  status      RequestStatus @default(PENDING)
+  submittedAt DateTime      @default(now())
+  reviewedBy  String?
+  reviewedAt  DateTime?
+
+  @@index([status])
+  @@index([submittedAt])
+}
+
+model Camera {
+  id        String  @id @default(cuid())
+  name      String
+  location  String
+  streamUrl String
+  isActive  Boolean @default(true)
+
+  attendanceLogs AttendanceLog[]
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  message   String
+  type      NotificationType @default(INFO)
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+  userId    String
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+}
